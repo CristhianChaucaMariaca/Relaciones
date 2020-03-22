@@ -37,8 +37,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /* Un USUARIO tiene un PERFIL */
     public function profile(){
         /* Realizamos la relacion con un perfil de un usuario */
         return $this->hasOne(Profile::class);
+    }
+
+    /* Un USUARIO pertenece a un NIVEL */
+    public function level(){
+        return $this->belongsTo(Level::class);
+    }
+
+    /* Un USUARIO pertenece y tiene muchos GRUPOS */
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class)->withTimestamps(); /* ->withTimestamps() este metodo llena los campos de fecha de creacion y actualizacion de forma automatica */
+    }
+
+    /* En esta relacion accederemos a la tabla LOCALIZACION desde USUARIOS de forma directa a travez de la tabla perfil sin tener que nombrar a perfil */
+    public function location(){
+        return $this->hasOneThrough(Location::class, Profile::class); /* Tengo una LOCALIZACION a travez de PERFIL */
     }
 }
